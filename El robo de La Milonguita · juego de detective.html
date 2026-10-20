@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>El robo de La Milonguita · juego de detective</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@600;700&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fafafa;--ink:#12176b;--soft:#4a55a8;--green:#0a7a5c;--red:#d93a2b;--panel:#dfe5ff;--card:#ffffff;--line:#b3c2fb;--ok:#0a7a5c;--on:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0f1226;--ink:#e8ebff;--soft:#a4aee8;--green:#4fd1a5;--red:#ff7a6c;--panel:#1c2250;--card:#171c40;--line:#2e3670;--ok:#4fd1a5;--on:#0f1226}}
+:root[data-theme="dark"]{--bg:#0f1226;--ink:#e8ebff;--soft:#a4aee8;--green:#4fd1a5;--red:#ff7a6c;--panel:#1c2250;--card:#171c40;--line:#2e3670;--ok:#4fd1a5;--on:#0f1226}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+main{max-width:860px;margin:0 auto;padding:26px 16px 60px}
+h1{font-family:"Newsreader",Georgia,serif;font-size:clamp(34px,8vw,54px);line-height:1.05;margin:0 0 6px;color:var(--green)}
+h2{font-family:"Newsreader",Georgia,serif;font-size:26px;margin:26px 0 10px;color:var(--green)}
+h3{margin:0 0 4px;font-size:20px}h4{margin:14px 0 4px;font-size:16px}
+.sub{color:var(--soft);margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 20px;margin-bottom:16px}
+button{font:inherit;cursor:pointer;border:0;border-radius:999px;padding:9px 18px;font-weight:700;background:var(--green);color:var(--on)}
+button.g{background:transparent;color:var(--ink);border:2px solid var(--ink);padding:7px 14px}
+button.g.on{background:var(--ink);color:var(--bg)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+button:disabled{opacity:.5;cursor:default}
+.stats{display:flex;gap:16px;flex-wrap:wrap;font-weight:700;color:var(--soft);margin-bottom:6px}
+.sus{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.sus button{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:10px 8px 12px;text-align:center;font-weight:500;transition:transform .15s,box-shadow .15s}.sus button:hover{transform:translateY(-3px)}
+.sus button.sel{border-color:var(--red);box-shadow:0 0 0 2px var(--red)}
+.sus .em{display:block;height:180px;border-radius:12px;background:var(--panel);margin-bottom:8px;padding-top:8px}.sus b{display:block}.sus small{color:var(--soft)}
+.ch{width:100%;height:100%;display:block;overflow:visible}
+.bob{animation:bob 3s ease-in-out infinite}.sel .bob{animation-duration:1.4s}@keyframes bob{50%{transform:translateY(-4px)}}
+.arm{transform-box:view-box;transform-origin:88px 92px;animation:arm var(--d,1s) ease-in-out infinite alternate}@keyframes arm{from{transform:rotate(var(--a,-10deg))}to{transform:rotate(var(--b,10deg))}}
+.a1{--d:.45s;--a:-8deg;--b:10deg}.a2{--d:.3s;--a:-18deg;--b:18deg}.a3{--d:.4s;--a:-6deg;--b:8deg}.a4{--d:2s;--a:0deg;--b:-35deg}.a5{--d:1.6s;--a:-5deg;--b:5deg}
+.eyes{transform-box:fill-box;transform-origin:center;animation:blink 4s infinite}@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.fl{opacity:0;animation:fl 2.4s infinite}@keyframes fl{0%,88%,100%{opacity:0}93%{opacity:1}}
+.pg{display:grid;grid-template-columns:170px 1fr;gap:20px;align-items:start}.pfig{height:260px;background:var(--panel);border-radius:16px;padding-top:10px}
+@media(max-width:560px){.pg{grid-template-columns:1fr}.pfig{height:210px;width:150px;margin:0 auto}}
+.hint .hrow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.hint ol{margin:10px 0 0;padding-left:22px}.hint li{margin:6px 0}
+.talk .mouth{fill:#8a2f2f;transform-box:fill-box;transform-origin:50% 0;animation:mth .22s ease-in-out infinite alternate}@keyframes mth{from{transform:scaleY(.6)}to{transform:scaleY(2.4)}}
+.lineup{margin:18px 0}.lu{text-align:center}.lu b{display:block}.lu small{color:var(--soft)}.lu .em{display:block;height:170px;border-radius:12px;background:var(--panel);margin-bottom:8px;padding-top:8px}
+@media (prefers-reduced-motion:reduce){.bob,.arm,.eyes,.fl,.mouth{animation:none}}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.q{font-size:20px;line-height:2.1;margin:10px 0}
+input[type=text]{font:inherit;font-weight:700;width:9.5ch;border:0;border-bottom:3px solid var(--ink);background:transparent;color:var(--ink);text-align:center;padding:0 2px}
+select{font:inherit;border:2px solid var(--ink);border-radius:10px;padding:5px 8px;background:var(--bg);color:var(--ink)}
+.fb{min-height:24px;font-weight:500;margin:6px 0}.fb.bad{color:var(--red)}.fb.ok{color:var(--ok)}
+.say{background:var(--card);border-left:5px solid var(--green);border-radius:10px;padding:10px 14px;font-size:18px;margin:10px 0}
+.e{color:var(--red);font-weight:700}.g2{color:var(--green);font-weight:700}
+.lib{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:6px 16px 12px}
+.lib ul{margin:0;padding:0;list-style:none}.lib li{padding:8px 0;border-top:1px dashed var(--line)}
+.lib .n{color:var(--soft);font-size:15px}.lib .w{font-style:italic}
+.sp{padding:2px 8px;font-size:13px}
+.empty{color:var(--soft);margin:12px 0}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.row button.sel{background:var(--red);color:#fff}
+.ref{width:100%;border-collapse:collapse;font-size:15px}.ref td{padding:3px 8px;border-bottom:1px solid var(--line)}
+details summary{cursor:pointer;font-weight:700}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<h1>el robo de La Milonguita</h1>
+<p class="sub">Juego de detective · estar + gerundio en pretérito indefinido · español argentino</p>
+
+<section id="intro" class="card">
+<h3>El caso</h3>
+<p>Anoche, en el club de tango <b>La Milonguita</b> (San Telmo), alguien abrió la caja fuerte de la oficina del primer piso y se llevó la recaudación de la milonga. Pasó <b>a las 22:00</b>. Hay cinco sospechosos y vos sos el detective.</p>
+<p><b>Cómo se juega:</b> elegí a un sospechoso y armá vos mismo la pregunta: completá los espacios con <span class="e">estar</span> en indefinido y el gerundio de un verbo a tu elección (<i>haciendo</i>, <i>mirando</i>, <i>tocando</i>…). Cada respuesta tiene un gerundio que tenés que anotar en tu libreta. Cuando tengas pruebas, acusá al ladrón con una frase correcta.</p>
+<p><b>Ojo con el trato:</b> a los mayores se les dice <i>usted</i> (estuvo) y a los demás, <i>vos</i> (estuviste). Preguntá por las coartadas de los demás para encontrar contradicciones.</p>
+<div id="lineup" class="sus lineup"></div><button id="go">Empezar</button>
+</section>
+
+<div id="game" hidden>
+<div class="stats"><span id="s1"></span><span id="s2"></span></div>
+<details class="card"><summary>Ayuda: estar en indefinido y gerundios</summary>
+<table class="ref"><tr><td>yo</td><td class="e">estuve</td><td>vos</td><td class="e">estuviste</td></tr>
+<tr><td>él / ella / usted</td><td class="e">estuvo</td><td>nosotros</td><td class="e">estuvimos</td></tr>
+<tr><td>ellos / ustedes</td><td class="e">estuvieron</td><td></td><td></td></tr></table>
+<p>Gerundio: <b>-ar → -ando</b> (tocar → tocando) · <b>-er / -ir → -iendo</b> (hacer → haciendo, abrir → abriendo) · <b>servir → sirviendo</b>.</p></details>
+
+<section class="card hint"><div class="hrow"><b>¿Atascado? Pedile una pista al comisario</b><button id="hbtn" class="g">Mostrar una pista</button></div><ol id="hl"></ol></section>
+<h2>Sospechosos</h2>
+<div id="sus" class="sus"></div>
+<section id="panel" class="card" hidden></section>
+
+<h2>Libreta del detective</h2>
+<div id="lib" class="lib"></div>
+
+<div class="row"><button id="accBtn">Ir a acusar al ladrón</button></div>
+
+</div>
+
+<section id="acc" class="card" hidden></section>
+<section id="end" class="card" hidden></section>
+</main>
+
+<script>
+var S=[
+{id:"marta",n:"Doña Marta",r:"dueña del club",e:"👵",t:"usted"},
+{id:"lola",n:"Lola",r:"bartender",e:"🍸",t:"vos"},
+{id:"beto",n:"Beto",r:"guitarrista",e:"🎸",t:"vos"},
+{id:"anibal",n:"Don Aníbal",r:"portero",e:"🧓",t:"usted"},
+{id:"julian",n:"Julián",r:"fotógrafo",e:"📷",t:"vos"}];
+var SELF={
+marta:{"21:00":["[[Estuve]] {{recibiendo}} a los músicos en la entrada.","recibir","a los músicos en la entrada"],"22:00":["[[Estuve]] {{contando}} las propinas con Lola en la barra.","contar","las propinas con Lola en la barra"],"23:00":["[[Estuve]] {{llamando}} a la policía y revisando la oficina.","llamar","a la policía"]},
+lola:{"21:00":["[[Estuve]] {{cortando}} limones y preparando fernet en la barra.","cortar","limones en la barra"],"22:00":["[[Estuve]] {{sirviendo}} fernet en la barra, al lado de Marta.","servir","fernet en la barra, al lado de Marta"],"23:00":["[[Estuve]] {{limpiando}} las mesas del salón.","limpiar","las mesas del salón"]},
+beto:{"21:00":["[[Estuve]] {{afinando}} la guitarra en el camarín.","afinar","la guitarra en el camarín"],"22:00":["[[Estuve]] {{tocando}} la guitarra en el escenario, con todo el salón mirándome.","tocar","la guitarra en el escenario"],"23:00":["[[Estuve]] {{guardando}} los equipos.","guardar","los equipos"]},
+anibal:{"21:00":["[[Estuve]] {{abriendo}} la puerta a los clientes.","abrir","la puerta a los clientes"],"22:00":["[[Estuve]] {{mirando}} el partido de Boca en la portería.","mirar","el partido de Boca en la portería"],"23:00":["[[Estuve]] {{esperando}} a la policía en la puerta.","esperar","a la policía en la puerta"]},
+julian:{"21:00":["[[Estuve]] {{sacando}} fotos del baile en la pista.","sacar","fotos del baile en la pista"],"22:00":["[[Estuve]] {{esperando}} un taxi en la puerta, charlando con Don Aníbal.","esperar","un taxi en la puerta"],"23:00":["[[Estuve]] {{hablando}} con la policía en la vereda.","hablar","con la policía en la vereda"]}};
+var W={
+lola:{marta:["[[Estuvo]] {{contando}} las propinas conmigo en la barra.","contar","las propinas con Lola en la barra"],beto:["[[Estuvo]] {{tocando}} en el escenario; lo vi desde la barra.","tocar","en el escenario"],anibal:["[[Estuvo]] {{mirando}} el partido en la portería; lo vi por la ventanilla.","mirar","el partido en la portería"],julian:["No lo vi en toda la sala.",0]},
+marta:{lola:["[[Estuvo]] {{preparando}} fernet a mi lado, sin moverse.","preparar","fernet al lado de Marta"],beto:["[[Estuvo]] {{tocando}} en el escenario; lo vio todo el salón.","tocar","en el escenario"],anibal:["No lo vi: la portería queda lejos de la barra.",0],julian:["No lo vi en el salón.",0]},
+beto:{lola:["[[Estuvo]] {{sirviendo}} en la barra.","servir","en la barra"],marta:["[[Estuvo]] {{contando}} dinero en la barra con Lola.","contar","dinero en la barra con Lola"],anibal:["Desde el escenario no lo vi.",0],julian:["[[Estuvo]] {{subiendo}} la escalera hacia la oficina; lo vi de reojo mientras tocaba.","subir","la escalera hacia la oficina"]},
+anibal:{lola:["No la vi: yo estaba en la portería.",0],marta:["No la vi en ningún momento.",0],beto:["No lo vi, pero lo escuché tocando toda la noche.",0],julian:["Julián no [[estuvo]] en la puerta. Yo [[estuve]] {{mirando}} la entrada todo el tiempo.",0]},
+julian:{lola:["No la vi.",0],marta:["No la vi.",0],beto:["[[Estuvo]] {{tocando}} en el escenario.","tocar","en el escenario"],anibal:["[[Estuvo]] {{charlando}} conmigo en la puerta.","charlar","con Julián en la puerta"]}};
+var WHY={marta:"Doña Marta estuvo contando propinas con Lola, y Lola lo confirma.",lola:"Lola estuvo sirviendo en la barra: Doña Marta y Beto la vieron.",beto:"Beto estuvo tocando en el escenario con todo el salón mirándolo.",anibal:"Lola vio a Don Aníbal mirando el partido por la ventanilla de la portería."};
+var IRR={servir:"sirviendo",dormir:"durmiendo",leer:"leyendo",ver:"viendo"};
+var VL=[["mirar","algo"],["tocar","algún instrumento"],["contar","dinero"],["servir","bebidas"],["esperar","a alguien"],["sacar","fotos"],["hablar","con alguien"],["limpiar","algo"],["abrir","alguna puerta"],["llamar","a alguien"],["charlar","con alguien"],["subir","las escaleras"],["preparar","algo"],["afinar","un instrumento"],["guardar","cosas"],["recibir","a alguien"],["cortar","algo"],["comer","algo"],["beber","algo"],["dormir",""],["leer","algo"],["bailar",""],["cantar",""],["ver","algo"]];
+function comp(v){var r=VL.filter(function(x){return x[0]===v})[0];return r?r[1]:""}
+function vopts(){return '<option value="hacer"'+(st.vb==="hacer"?" selected":"")+'>hacer · pregunta abierta (¿Qué…?)</option>'+VL.map(function(v){return '<option value="'+v[0]+'"'+(st.vb===v[0]?" selected":"")+'>'+v[0]+'</option>'}).join("")}
+function R(e){if(st.vb==="hacer"||!e[1])return e[0];return (e[1]===st.vb?"Sí. ":"No. ")+e[0]}
+function ger(v){return IRR[v]||(v.slice(-2)==="ar"?v.slice(0,-2)+"ando":v.slice(0,-2)+"iendo")}
+function H(t){return t.replace(/\[\[(.+?)\]\]/g,'<span class="e">$1</span>').replace(/\{\{(.+?)\}\}/g,'<span class="g2">$1</span>')}
+function P(t){return t.replace(/\[\[|\]\]|\{\{|\}\}/g,"")}
+function norm(s){return s.trim().toLowerCase()}
+function $(i){return document.getElementById(i)}
+function get(id){return S.filter(function(s){return s.id===id})[0]}
+function others(id){return S.filter(function(s){return s.id!==id})}
+var FORMS=["estuve","estuviste","estuvo","estuvimos","estuvieron"];
+var st,lib;
+function reset(){st={sid:null,qt:1,time:"21:00",x:null,z:null,pend:null,errs:0,qs:0,tries:0,cul:null,hn:0,vb:"hacer"};lib=[];}
+reset();
+
+var LOOK={
+marta:{skin:"#f0c8a4",top:"#8e5bd0",bot:"#52407f",shoe:"#3a2a33",a:"a1",deco:"",hair:'<path d="M35 48c-1-22 11-31 25-31s26 9 25 31c-6-11-14-15-25-15s-19 4-25 15z" fill="#d3d6e0"/><circle cx="60" cy="15" r="9" fill="#d3d6e0"/>',x:'<g fill="none" stroke-width="2"><circle cx="51" cy="52" r="7"/><circle cx="69" cy="52" r="7"/><path d="M58 52h4"/></g>',prop:'<rect x="80" y="122" width="22" height="12" rx="2" fill="#7ad39a"/><rect x="84" y="117" width="22" height="12" rx="2" fill="#8fe0ab"/>'},
+lola:{skin:"#e8b48f",top:"#f6f6fb",bot:"#26264d",shoe:"#14142e",a:"a2",deco:'<path d="M37 90h12v56H37zM71 90h12v56H71z" fill="#26264d"/>',hair:'<path d="M35 50c-2-24 10-32 25-32s27 8 25 32c-4-12-12-17-25-17s-21 5-25 17z" fill="#2d1b1b"/><ellipse cx="90" cy="64" rx="7" ry="16" fill="#2d1b1b"/>',x:"",prop:'<rect x="81" y="108" width="14" height="30" rx="5" fill="#cfd5e6"/><rect x="83" y="101" width="10" height="8" rx="3" fill="#9aa5c4"/>'},
+beto:{skin:"#d9a07a",top:"#d64a3a",bot:"#2f4a8a",shoe:"#2a1e1a",a:"a3",deco:'<g transform="rotate(-22 60 130)"><ellipse cx="58" cy="134" rx="25" ry="19" fill="#c8793c"/><circle cx="58" cy="134" r="6" fill="#4a2a14"/><rect x="80" y="129" width="42" height="8" rx="2" fill="#7a4a24"/></g>',hair:'<g fill="#3a2418"><circle cx="40" cy="38" r="10"/><circle cx="52" cy="29" r="11"/><circle cx="68" cy="29" r="11"/><circle cx="80" cy="38" r="10"/></g>',x:"",prop:""},
+anibal:{skin:"#e2b08e",top:"#34589c",bot:"#252a44",shoe:"#14142e",a:"a4",deco:'<circle cx="60" cy="100" r="2.5" fill="#f2c94c"/><circle cx="60" cy="116" r="2.5" fill="#f2c94c"/><circle cx="60" cy="132" r="2.5" fill="#f2c94c"/>',hair:'<path d="M34 44c2-18 14-24 26-24s24 6 26 24z" fill="#34589c"/><rect x="30" y="41" width="44" height="7" rx="3" fill="#27427a"/>',x:'<path d="M47 63c5-5 9-3 13 0 4-3 8-5 13 0-5 6-9 3-13 1-4 2-8 5-13-1z" fill="#9a9aab"/>',prop:'<rect x="83" y="124" width="12" height="15" rx="4" fill="#8a5a2b"/><rect x="92" y="104" width="3" height="26" fill="#c6c6d2"/>'},
+julian:{skin:"#e0aa86",top:"#2f8a6b",bot:"#3a3a52",shoe:"#e8e8f0",mc:"#f3e6d8",a:"a5",deco:"",hair:'<path d="M35 44c0-20 11-27 25-27s25 7 25 27z" fill="#e0a41f"/><rect x="33" y="41" width="54" height="9" rx="4" fill="#bb8512"/><path d="M38 56c2 22 12 30 22 30s20-8 22-30c-6 8-14 11-22 11s-16-3-22-11z" fill="#5b3b24"/>',x:"",prop:'<rect x="76" y="118" width="28" height="19" rx="4" fill="#3b3b4f"/><circle cx="90" cy="128" r="6.5" fill="#9fd0f0"/><circle class="fl" cx="102" cy="114" r="6" fill="#fff6a8" stroke="none"/>'}};
+function CH(id){var o=LOOK[id],k='stroke="#1a1f4d" stroke-width="2.5" stroke-linejoin="round"',mc=o.mc||"#1a1f4d";
+ return '<svg class="ch" viewBox="0 0 120 220" role="img" aria-label="'+get(id).n+'"><ellipse cx="60" cy="212" rx="34" ry="6" fill="#000" opacity=".14"/><g class="bob"><g '+k+'><rect x="43" y="140" width="15" height="66" rx="7" fill="'+o.bot+'"/><rect x="62" y="140" width="15" height="66" rx="7" fill="'+o.bot+'"/><ellipse cx="50" cy="207" rx="12" ry="6" fill="'+o.shoe+'"/><ellipse cx="70" cy="207" rx="12" ry="6" fill="'+o.shoe+'"/><rect x="36" y="82" width="48" height="66" rx="18" fill="'+o.top+'"/><rect x="26" y="88" width="12" height="46" rx="6" fill="'+o.top+'"/><circle cx="32" cy="138" r="7" fill="'+o.skin+'"/>'+o.deco+'<rect x="54" y="70" width="12" height="16" rx="4" fill="'+o.skin+'"/><circle cx="60" cy="50" r="24" fill="'+o.skin+'"/>'+o.hair+'<g class="eyes" fill="#1a1f4d" stroke="none"><circle cx="51" cy="52" r="2.8"/><circle cx="69" cy="52" r="2.8"/></g><path class="mouth" d="M52 62q8 7 16 0" fill="none" stroke="'+mc+'" stroke-width="2.5" stroke-linecap="round"/><circle cx="44" cy="60" r="4" fill="#ff8a7a" opacity=".35" stroke="none"/><circle cx="76" cy="60" r="4" fill="#ff8a7a" opacity=".35" stroke="none"/>'+o.x+'<g class="arm '+o.a+'"><rect x="82" y="88" width="12" height="46" rx="6" fill="'+o.top+'"/><circle cx="88" cy="138" r="7" fill="'+o.skin+'"/>'+o.prop+'</g></g></g></svg>'}
+$("lineup").innerHTML=S.map(function(s){return '<div class="lu"><span class="em">'+CH(s.id)+'</span><b>'+s.n+'</b><small>'+s.r+'</small></div>'}).join("");
+var TK;function talk(ms){var f=document.querySelector(".pfig");if(!f)return;f.classList.add("talk");clearTimeout(TK);TK=setTimeout(function(){f.classList.remove("talk")},ms)}
+function speak(t){if(!window.speechSynthesis)return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);var v=speechSynthesis.getVoices().filter(function(v){return /^es/i.test(v.lang)});
+ var b=v.filter(function(x){return /es[-_]AR/i.test(x.lang)})[0]||v.filter(function(x){return /es[-_](419|US|MX)/i.test(x.lang)})[0]||v[0];if(b){u.voice=b;u.lang=b.lang}else u.lang="es-AR";u.rate=.92;talk(Math.min(9000,t.length*75));speechSynthesis.speak(u)}
+function stats(){$("s1").textContent="Preguntas: "+st.qs;$("s2").textContent="Errores: "+st.errs}
+function renderSus(){$("sus").innerHTML=S.map(function(s){return '<button data-s="'+s.id+'" class="'+(st.sid===s.id?"sel":"")+'"><span class="em">'+CH(s.id)+'</span><b>'+s.n+'</b><small>'+s.r+' · «'+s.t+'»</small></button>'}).join("")}
+function expForm(){var s=get(st.sid);return st.qt===1?(s.t==="usted"?"estuvo":"estuviste"):st.qt===2?"estuvo":"estuvieron"}
+function opts(sel,skip){return others(st.sid).filter(function(o){return o.id!==skip}).map(function(o){return '<option value="'+o.id+'"'+(o.id===sel?" selected":"")+'>'+o.n+'</option>'}).join("")}
+function renderPanel(){
+ var s=get(st.sid),p=$("panel");p.hidden=false;
+ var tabs=[["1","Sobre su propia coartada"],["2","Sobre otra persona (a las 22:00)"],["3","Sobre dos personas (a las 22:00)"]].map(function(t){return '<button class="g'+(st.qt==t[0]?" on":"")+'" data-q="'+t[0]+'">'+t[1]+'</button>'}).join("");
+ var q="",V=st.vb,hv=V==="hacer",C=hv?"":" "+comp(V);var Ia='<input type="text" id="i1" placeholder="estar" aria-label="estar en indefinido" autocomplete="off" autocapitalize="off">',Ib='<input type="text" id="i2" placeholder="'+V+'" aria-label="gerundio de '+V+'" autocomplete="off" autocapitalize="off">',I1=Ia+' '+Ib;
+ if(st.qt===1){q=(hv?'¿Qué '+I1+' '+s.t:'¿'+Ia+' '+s.t+' '+Ib+C)+' a las <select id="tm">'+["21:00","22:00","23:00"].map(function(t){return '<option'+(t===st.time?" selected":"")+'>'+t+'</option>'}).join("")+'</select>?'}
+ if(st.qt===2){q=(hv?'¿Qué '+I1:'¿'+Ia)+' <select id="xs">'+opts(st.x)+'</select>'+(hv?'':' '+Ib+C)+' a las 22:00?'}
+ if(st.qt===3){q=(hv?'¿Qué '+I1:'¿'+Ia)+' <select id="xs">'+opts(st.x,st.z)+'</select> y <select id="zs">'+opts(st.z,st.x)+'</select>'+(hv?'':' '+Ib+C)+' a las 22:00?'}
+ p.innerHTML='<div class="pg"><div class="pfig">'+CH(s.id)+'</div><div><h3>'+s.n+' <small>· '+s.r+'</small></h3><p class="n">Tratamiento: <b>«'+s.t+'»</b> '+(s.t==="usted"?"(formal)":"(voseo)")+'</p><div class="tabs">'+tabs+'</div><p class="n">Verbo: <select id="vb" aria-label="Verbo">'+vopts()+'</select></p><div class="q">'+q+'</div><div class="row"><button id="ask">Preguntar</button><button class="g" id="hint">Pista</button></div><div id="fb" class="fb"></div><div id="ans"></div></div></div>';
+ if(st.pend)showAns();
+}
+function fb(t,c){var f=$("fb");if(f){f.textContent=t;f.className="fb "+(c||"")}}
+function ask(){
+ if(st.pend){fb("Primero anotá la pista en tu libreta.","bad");return}
+ var a=norm($("i1").value),g=norm($("i2").value),exp=expForm(),s=get(st.sid);
+ if(!a||!g){fb("Completá los dos espacios.","bad");return}
+ var er=[];
+ if(a!==exp){er.push(FORMS.indexOf(a)<0?"«"+a+"» no es una forma de estar en indefinido.":(st.qt===3?"Con dos personas (ellos) se usa «estuvieron».":st.qt===1?"A "+s.n+" lo tratás de «"+s.t+"»: se usa «"+exp+"».":"Con una sola persona (él / ella) se usa «estuvo»."))}
+ var eg=ger(st.vb);if(g!==eg)er.push("El gerundio de "+st.vb+" es «"+eg+"»"+(IRR[st.vb]?" (irregular).":"."));
+ if(er.length){st.errs++;stats();fb(er.join(" "),"bad");return}
+ st.qs++;stats();var ent,subj,lab;
+ if(st.qt===1){ent=SELF[s.id][st.time];subj=s.n;lab="A las "+st.time+" · su coartada"}
+ else if(st.qt===2){var x=get(st.x);ent=W[s.id][x.id];subj=x.n;lab="A las 22:00 · sobre "+x.n}
+ else{var x1=get(st.x),z1=get(st.z),a1=W[s.id][x1.id],b1=W[s.id][z1.id];
+  st.pend=null;fb("","");var h='<b>'+x1.n+':</b> '+H(R(a1))+'<br><b>'+z1.n+':</b> '+H(R(b1));
+  addLib(s.id,"A las 22:00 · sobre "+x1.n+" y "+z1.n,h,"");showSay(h);return}
+ var h2=H(R(ent));
+ if(ent[1]){st.pend={sid:s.id,lab:lab,h:h2,subj:subj,inf:ent[1],rest:ent[2]};fb("");showAns()}
+ else{addLib(s.id,lab,h2,"");showSay(h2)}
+}
+function showSay(h){talk(2800);fb("¡Buena pregunta!","ok");$("ans").innerHTML='<div class="say"><b>'+get(st.sid).n+':</b> '+h+' <button class="g sp" data-sp="1" aria-label="Escuchar">&#128266;</button></div>'}
+function showAns(){var p=st.pend;talk(2800);
+ $("ans").innerHTML='<div class="say"><b>'+get(p.sid).n+':</b> '+p.h+' <button class="g sp" data-sp="1" aria-label="Escuchar">&#128266;</button></div><p>Anotá en tu libreta: <b>'+p.subj+'</b> <input type="text" id="n1" placeholder="estar" autocomplete="off" autocapitalize="off"> <input type="text" id="n2" placeholder="'+p.inf+'" autocomplete="off" autocapitalize="off"> '+p.rest+'.</p><div class="row"><button id="note">Anotar</button><button class="g" id="nhint">Pista</button></div>'}
+function note(hint){var p=st.pend,g=ger(p.inf);
+ if(hint){st.errs++;stats();$("n1").value="estuvo";$("n2").value=g;return}
+ var a=norm($("n1").value),b=norm($("n2").value);
+ if(a==="estuvo"&&b===g){addLib(p.sid,p.lab,p.h,p.subj+" estuvo "+g+" "+p.rest+".");st.pend=null;fb("¡Anotado!","ok");$("ans").innerHTML='<div class="say">'+P(p.h.replace(/<[^>]+>/g,""))+'</div>'}
+ else{st.errs++;stats();var m=[];if(a!=="estuvo")m.push("Es una sola persona (3.ª persona): «estuvo».");if(b!==g)m.push("El gerundio de "+p.inf+" es «"+g+"»"+(IRR[p.inf]?" (irregular: e → i).":"."));fb(m.join(" "),"bad")}
+}
+function addLib(sid,lab,h,nt){lib.push({sid:sid,lab:lab,h:h,nt:nt});renderLib()}
+function renderLib(){var out="";S.forEach(function(s){var L=lib.filter(function(l){return l.sid===s.id});if(!L.length)return;
+ out+='<h4>'+s.n+'</h4><ul>'+L.map(function(l){return '<li><b>'+l.lab+'</b><br><span class="w">'+l.h+'</span> <button class="g sp" data-t="'+P(l.h.replace(/<[^>]+>/g,"")).replace(/"/g,"&quot;")+'" aria-label="Escuchar">&#128266;</button>'+(l.nt?'<br><span class="n">Nota: '+l.nt+'</span>':'')+'</li>'}).join("")+'</ul>'});
+ $("lib").innerHTML=out||'<p class="empty">Todavía no anotaste nada. Elegí a un sospechoso y hacé tu primera pregunta.</p>'}
+
+document.addEventListener("click",function(e){var t=e.target.closest("button");if(!t)return;
+ if(t.id==="go"){$("intro").hidden=true;$("game").hidden=false;window.scrollTo(0,0);stats();renderSus();renderLib();return}
+ if(t.dataset.s){st.sid=t.dataset.s;st.pend=null;var o=others(st.sid);st.x=o[0].id;st.z=o[1].id;renderSus();renderPanel();return}
+ if(t.dataset.q){if(st.pend){fb("Primero anotá la pista.","bad");return}st.qt=+t.dataset.q;renderPanel();return}
+ if(t.id==="ask")return ask();
+ if(t.id==="hint"){var i1=$("i1");if(i1){i1.value=expForm();$("i2").value=ger(st.vb);st.errs++;stats()}return}
+ if(t.id==="note")return note(false);if(t.id==="nhint")return note(true);
+ if(t.dataset.sp){var sy=t.parentNode.cloneNode(true);speak(sy.textContent.replace(/🔊|\u{1F50A}/gu,""));return}
+ if(t.dataset.t){speak(t.dataset.t);return}
+ if(t.id==="accBtn"){renderAcc();window.scrollTo(0,0);return}
+ if(t.id==="back"){$("acc").hidden=true;$("game").hidden=false;window.scrollTo(0,0);return}
+ if(t.id==="hbtn"){showHint();return}
+ if(t.dataset.c){st.cul=t.dataset.c;renderAcc();return}
+ if(t.id==="accuse")return accuse();
+ if(t.id==="again"){reset();$("hl").innerHTML="";$("hbtn").disabled=false;$("hbtn").textContent="Mostrar una pista";$("end").hidden=true;$("game").hidden=true;$("intro").hidden=false;$("panel").hidden=true;$("acc").hidden=true;stats();renderSus();renderLib();window.scrollTo(0,0)}
+});
+document.addEventListener("change",function(e){var i=e.target.id;
+ if(i==="vb"){st.vb=e.target.value;renderPanel();return}
+ if(i==="tm")st.time=e.target.value;
+ else if(i==="xs"){st.x=e.target.value;if(st.qt===3&&st.z===st.x)st.z=others(st.sid).filter(function(o){return o.id!==st.x})[0].id;renderPanel()}
+ else if(i==="zs"){st.z=e.target.value;if(st.z===st.x)st.x=others(st.sid).filter(function(o){return o.id!==st.z})[0].id;renderPanel()}});
+document.addEventListener("keydown",function(e){if(e.key==="Enter"){var i=e.target.id;if(i==="i1"||i==="i2")ask();if(i==="n1"||i==="n2")note(false)}});
+
+var HINTS=["La alarma sonó a las 22:00. Concentrate en lo que cada sospechoso estuvo haciendo a esa hora.","Una buena coartada la confirma otra persona. Preguntales por los demás y verificá quién dice haber estado con quién.","Uno dice que estuvo en la puerta charlando con Don Aníbal. Preguntale al portero qué estuvo haciendo y a quién vio en la entrada.","Beto vio a alguien subiendo la escalera hacia la oficina mientras tocaba. Preguntale a Beto por Julián.","Es Julián: su coartada la contradicen Don Aníbal y Beto."];
+function showHint(){if(st.hn>=HINTS.length)return;$("hl").innerHTML+='<li>'+HINTS[st.hn]+'</li>';st.hn++;var b=$("hbtn");b.textContent="Otra pista ("+st.hn+"/"+HINTS.length+")";if(st.hn>=HINTS.length)b.disabled=true}
+function renderAcc(){var a=$("acc");a.hidden=false;$("game").hidden=true;var c=st.cul&&get(st.cul);
+ a.innerHTML='<h3>Última página: la acusación</h3><p class="n">Elegí al ladrón y escribí la frase correcta. Si dudás, volvé a tu libreta.</p><div class="sus">'+S.map(function(s){return '<button class="'+(st.cul===s.id?"sel":"")+'" data-c="'+s.id+'"><span class="em">'+CH(s.id)+'</span><b>'+s.n+'</b><small>'+s.r+'</small></button>'}).join("")+'</div>'+
+ (c?'<p class="q">A las 22:00, <b>'+c.n+'</b> <input type="text" id="a1" placeholder="estar"> <input type="text" id="a2" placeholder="robar"> la recaudación en la oficina.</p><button id="accuse">Acusar</button>':'<p class="empty">Elegí a quién acusás.</p>')+'<div id="afb" class="fb"></div><div class="row"><button class="g" id="back">Volver a investigar</button></div>'}
+function accuse(){var a=norm($("a1").value),b=norm($("a2").value),f=$("afb");f.className="fb bad";
+ if(a!=="estuvo"||b!=="robando"){st.errs++;stats();f.textContent="Revisá la frase: una sola persona (3.ª persona) → «estuvo» y el gerundio de robar → «robando».";return}
+ if(st.cul!=="julian"){st.tries++;f.textContent="No fue "+get(st.cul).n+". "+WHY[st.cul]+" Revisá tu libreta y probá de nuevo.";return}
+ var tot=st.errs+st.tries*2,stars=tot<=3?3:tot<=8?2:1;
+ $("game").hidden=true;$("acc").hidden=true;var e=$("end");e.hidden=false;
+ e.innerHTML='<h3>¡Caso resuelto! '+"★".repeat(stars)+"☆".repeat(3-stars)+'</h3><p>El ladrón era <b>Julián</b>. A las 22:00 <span class="e">estuvo</span> <span class="g2">robando</span> la recaudación en la oficina.</p><ul><li>Julián dijo que <span class="e">estuvo</span> <span class="g2">esperando</span> un taxi en la puerta, pero Don Aníbal <span class="e">estuvo</span> <span class="g2">mirando</span> la entrada todo el tiempo y no lo vio.</li><li>Beto lo vio <span class="g2">subiendo</span> la escalera hacia la oficina.</li><li>Los otros tres tenían coartadas confirmadas por testigos.</li></ul><p class="n">Preguntas: '+st.qs+' · Errores de gramática: '+st.errs+' · Acusaciones falladas: '+st.tries+'</p><button id="again">Jugar otra vez</button>';window.scrollTo(0,0)}
+</script>
+</body>
+</html>
